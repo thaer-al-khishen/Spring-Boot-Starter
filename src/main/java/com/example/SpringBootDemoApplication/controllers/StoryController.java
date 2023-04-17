@@ -3,7 +3,7 @@ package com.example.SpringBootDemoApplication.controllers;
 import com.example.SpringBootDemoApplication.jwt.JwtUtil;
 import com.example.SpringBootDemoApplication.jwt.UserDetailsImpl;
 import com.example.SpringBootDemoApplication.models.Story;
-import com.example.SpringBootDemoApplication.models.auth.User;
+import com.example.SpringBootDemoApplication.models.auth.AppUser;
 import com.example.SpringBootDemoApplication.repositories.auth.UserRepository;
 import com.example.SpringBootDemoApplication.services.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class StoryController {
     @GetMapping
     public ResponseEntity<List<Story>> getStoriesByUserId(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser appUser = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found"));
 
         boolean isAdmin = userDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
@@ -42,7 +42,7 @@ public class StoryController {
             List<Story> stories = storyService.getAllStoriesAdmin();
             return ResponseEntity.ok(stories);
         } else {
-            Long userId = user.getId();
+            Long userId = appUser.getId();
             List<Story> stories = storyService.findAllStories(userId);
             return ResponseEntity.ok(stories);
         }
@@ -52,8 +52,8 @@ public class StoryController {
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Story> createStory(@Valid @RequestBody Story story, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Story createdStory = storyService.saveOrUpdateStory(story, user);
+        AppUser appUser = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Story createdStory = storyService.saveOrUpdateStory(story, appUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStory);
     }
 
@@ -88,7 +88,7 @@ public class StoryController {
         return null;
     }
 
-    private User getUser(HttpServletRequest request) {
+    private AppUser getUser(HttpServletRequest request) {
         String jwt = parseJwt(request);
         String username = jwtUtil.extractUsername(jwt);
         return userRepository.findByUsername(username).orElse(null);

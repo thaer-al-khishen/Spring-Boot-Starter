@@ -1,6 +1,6 @@
 package com.example.SpringBootDemoApplication.models;
 
-import com.example.SpringBootDemoApplication.models.auth.User;
+import com.example.SpringBootDemoApplication.models.auth.AppUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ public class Story {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User user;
+    private AppUser appUser;
 
     // Add the User association and other required fields, constructors, getters, and setters
 
@@ -46,11 +46,11 @@ public class Story {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

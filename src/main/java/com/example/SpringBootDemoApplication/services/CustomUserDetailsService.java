@@ -2,7 +2,7 @@ package com.example.SpringBootDemoApplication.services;
 
 import com.example.SpringBootDemoApplication.jwt.UserDetailsImpl;
 import com.example.SpringBootDemoApplication.models.auth.Role;
-import com.example.SpringBootDemoApplication.models.auth.User;
+import com.example.SpringBootDemoApplication.models.auth.AppUser;
 import com.example.SpringBootDemoApplication.repositories.auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,15 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        AppUser appUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : user.getRoles()) {
+        for (Role role : appUser.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
         // Return an instance of UserDetailsImpl instead of org.springframework.security.core.userdetails.User
-        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
+        return new UserDetailsImpl(appUser.getId(), appUser.getUsername(), appUser.getPassword(), authorities);
     }
 }

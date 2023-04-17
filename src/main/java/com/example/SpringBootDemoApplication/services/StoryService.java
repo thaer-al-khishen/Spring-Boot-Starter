@@ -1,9 +1,7 @@
 package com.example.SpringBootDemoApplication.services;
 
-import com.example.SpringBootDemoApplication.models.Note;
 import com.example.SpringBootDemoApplication.models.Story;
-import com.example.SpringBootDemoApplication.models.auth.User;
-import com.example.SpringBootDemoApplication.repositories.NoteRepository;
+import com.example.SpringBootDemoApplication.models.auth.AppUser;
 import com.example.SpringBootDemoApplication.repositories.StoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ public class StoryService {
     private StoryRepository storyRepository;
 
     public List<Story> findAllStories(Long id) {
-        return storyRepository.findByUserId(id);
+        return storyRepository.findByAppUserId(id);
     }
 
     public List<Story> getAllStoriesAdmin() {
@@ -28,8 +26,8 @@ public class StoryService {
         return storyRepository.findById(storyId);
     }
 
-    public Story saveOrUpdateStory(Story story, User user) {
-        story.setUser(user);
+    public Story saveOrUpdateStory(Story story, AppUser appUser) {
+        story.setUser(appUser);
         return storyRepository.save(story);
     }
 

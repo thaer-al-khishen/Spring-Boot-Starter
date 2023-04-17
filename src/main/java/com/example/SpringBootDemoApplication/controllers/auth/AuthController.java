@@ -53,8 +53,8 @@ public class AuthController {
                     .body("Error: Username is already taken!");
         }
 
-        User user = createUser(registerRequest);
-        userRepository.save(user);
+        AppUser appUser = createUser(registerRequest);
+        userRepository.save(appUser);
 
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -87,12 +87,12 @@ public class AuthController {
         }
     }
 
-    private User createUser(RegisterRequest registerRequest) {
-        User user = new User(registerRequest.getUsername(),
+    private AppUser createUser(RegisterRequest registerRequest) {
+        AppUser appUser = new AppUser(registerRequest.getUsername(),
                 encoder.encode(registerRequest.getPassword()));
         Set<Role> roles = getRolesForUser(registerRequest.getRoles());
-        user.setRoles(roles);
-        return user;
+        appUser.setRoles(roles);
+        return appUser;
     }
 
     private Set<Role> getRolesForUser(Set<String> strRoles) {

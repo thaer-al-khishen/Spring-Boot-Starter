@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StoryRepository extends JpaRepository<Story, Long> {
-    List<Story> findByUserId(Long userId);
-    Optional<Story> getByUserId(Long userId);
+    List<Story> findByAppUserId(Long userId);
+    Optional<Story> getByAppUserId(Long userId);
 }
