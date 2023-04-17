@@ -1,9 +1,11 @@
-FROM gradle:7.4-jdk8 AS build
+FROM gradle:7.4.0-jdk8 AS build
 WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
 
-FROM openjdk:8
+FROM adoptopenjdk/openjdk11:alpine-slim
+ENV PORT=9000
 COPY --from=build /app/build/libs/Spring-boot-starter-archetype-1.0.0-SNAPSHOT.jar /app.jar
+EXPOSE $PORT
 CMD ["java", "-jar", "/app.jar"]
