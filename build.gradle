@@ -36,6 +36,12 @@ dependencies {
     //postgres
     implementation 'org.postgresql:postgresql:42.3.1'
 
+    // WebSocket dependency
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // (Optional) Dependency for using WebSocket with SockJS
+    implementation 'org.webjars:webjars-locator-core'
+
+
 }
 
 test {
